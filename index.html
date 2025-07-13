@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px; /* Max width for the container */
+            margin: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        img {
+            margin-top: 20px;
+            width: 80%; /* Default width for small screen */
+            height: auto;
+            max-width: 400px; /* Max size for medium screens */
+        }
+        .download-btn {
+            padding: 10px 20px;
+            background-color: #ff6347;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            margin-top: 20px;
+        }
+        .download-btn:hover {
+            background-color: #e5533e;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>QR Code Generator BY MR SABIT</h1>
+    <input type="text" id="text-input" placeholder="Enter Text or URL">
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <br>
+    <img id="qr-code" src="" alt="QR Code will appear here">
+    <br>
+    <button id="download-btn" class="download-btn" onclick="downloadQRCode()">Download QR Code</button>
+    <p id="download-message" class="message">Download Completed!</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+    function generateQRCode() {
+        const text = document.getElementById('text-input').value;
+        const qrCodeImg = document.getElementById('qr-code');
+        const downloadBtn = document.getElementById('download-btn');
+        
+        if (text.trim() === "") {
+            alert("Please enter text or a URL to generate QR Code.");
+            return;
+        }
+        
+        QRCode.toDataURL(text, {
+            errorCorrectionLevel: 'H',  // Higher error correction for better quality
+            type: 'image/png',           // Ensuring the type is PNG (HD format)
+            quality: 0.95,               // Ensure high quality
+            scale: 10                    // Increase scale for better resolution
+        }, function (err, url) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            qrCodeImg.src = url;
+            downloadBtn.style.display = 'block'; // Show the download button
+            downloadBtn.setAttribute('data-url', url); // Set the URL for download
+            document.getElementById('download-message').style.display = 'none'; // Hide the message initially
+        });
+    }
+
+    function downloadQRCode() {
+        const url = document.getElementById('download-btn').getAttribute('data-url');
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'MR_SABIT_QR.png'; // File name
+        a.click();
+
+        // Display download completion message
+        document.getElementById('download-message').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
